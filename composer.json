@@ -1,0 +1,29 @@
+{
+    "name": "wundii/ayumila",
+    "version": "0.1",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andreas Wunderwald",
+            "email": "wundii@gmail.com"
+        }
+    ],
+    "require": {
+        "league/oauth2-google": "~3.0",
+        "php-amqplib/php-amqplib": "~v3.1.0",
+        "php-di/php-di": "~6.3",
+        "phpunit/phpunit": "~9",
+        "twig/twig": "^2.0",
+        "ext-mysqli": "*",
+        "ext-apcu": "*",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ayumila\\": "src/"
+        },
+        "files": [
+            "src/Functions/errorHandling.php"
+        ]
+    }
+}
