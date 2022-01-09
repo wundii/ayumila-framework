@@ -4,7 +4,7 @@ ini_set('display_errors', '1');
 ini_set("date.timezone", "Europe/Berlin");
 
 require(__DIR__ . "/../../../../autoload.php");
-require(__DIR__ . "/../../../../propel/config/config.php");
+require(__DIR__ . "/../../../../../propel/config/config.php");
 
 use Ayumila\Classes\Helper;
 use Ayumila\Schedule\ScheduleAbstract;

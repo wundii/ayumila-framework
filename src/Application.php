@@ -3,7 +3,7 @@
 /**
  * @todo: appControllerDirector
  * @todo: appTwigDirector
- * @todo: appScheduleDirector + Bugfix...
+ * @todo: appScheduleDirector
  */
 
 namespace Ayumila;
