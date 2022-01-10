@@ -4,16 +4,34 @@ ini_set('display_errors', '1');
 ini_set("date.timezone", "Europe/Berlin");
 
 require(__DIR__ . "/../../../../autoload.php");
-require(__DIR__ . "/../../../../../propel/config/config.php");
 
 use Ayumila\Classes\Helper;
 use Ayumila\Schedule\ScheduleAbstract;
 use Ayumila\Schedule\Trigger;
-use smarthome\schedule\ApplicationLog;
+use Symfony\Component\Yaml\Yaml;
 
-$scheduleClasses = [
-    ApplicationLog::class
-];
+$ayumilaYaml = Yaml::parseFile(__DIR__.'/../../../../../config/ayumila.yaml');
+
+if(isset($ayumilaYaml['Ayumila']['Schedule']['AutoloadFiles'])){
+    foreach ($ayumilaYaml['Ayumila']['Schedule']['AutoloadFiles'] AS $autoloadFile)
+    {
+        if(file_exists($autoloadFile))
+        {
+            require_once($autoloadFile);
+        }
+    }
+}
+
+$scheduleClasses = array();
+if(isset($ayumilaYaml['Ayumila']['Schedule']['ProcessClasses'])){
+    foreach ($ayumilaYaml['Ayumila']['Schedule']['ProcessClasses'] AS $class)
+    {
+        if(class_exists($class))
+        {
+            $scheduleClasses[] = $class;
+        }
+    }
+}
 
 $time          = 0;
 $processList   = array();

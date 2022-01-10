@@ -4,6 +4,7 @@ namespace Ayumila\Http;
 
 use Ayumila\Abstract\ResponseAbstract;
 use Exception;
+use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -13,7 +14,7 @@ use Twig\Loader\FilesystemLoader;
 class ResponseTwigException extends ResponseAbstract
 {
     private string $contentType = "Content-Type:text/html; charset=utf-8";
-    private string $directory   = __DIR__ . '/../../twig';
+    private string $directory;
 
     /**
      * @return self
@@ -23,7 +24,26 @@ class ResponseTwigException extends ResponseAbstract
         return new self;
     }
 
-    private function __construct(){}
+    private function __construct()
+    {
+        $this->loadAyumilaYaml();
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    private function loadAyumilaYaml(): array
+    {
+        $ayumilaYaml = Yaml::parseFile(__DIR__.'/../../../../../config/ayumila.yaml');
+        try{
+            $this->directory = $ayumilaYaml['Ayumila']['Twig']['Path'];
+        }catch (Exception $ex)
+        {
+            throw new Exception('The entry Ayumila > Twig > Path must exist in the Ayumila yml.');
+        }
+        return $ayumilaYaml;
+    }
 
     /**
      * @return string

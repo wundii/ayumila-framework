@@ -1,7 +1,8 @@
 {
     "name": "wundii/ayumila",
-    "version": "0.1",
+    "version": "0.1.2",
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Andreas Wunderwald",
@@ -9,10 +10,13 @@
         }
     ],
     "require": {
+        "php": ">=8.0.0",
         "league/oauth2-google": "~3.0",
         "php-amqplib/php-amqplib": "~v3.1.0",
         "php-di/php-di": "~6.3",
         "phpunit/phpunit": "~9",
+        "propel/propel": "~2.0.0-beta1",
+        "symfony/monolog-bundle": "^3.7",
         "twig/twig": "^2.0",
         "ext-mysqli": "*",
         "ext-apcu": "*",

@@ -26,6 +26,8 @@ use Ayumila\Traits\MultitonStandard;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Exception;
+use Symfony\Component\Yaml\Yaml;
 
 require_once (__DIR__.'/Functions/errorHandling.php');
 
@@ -34,7 +36,7 @@ class Application
     use MultitonStandard;
 
     private ?RequestMock  $requestMock = null;
-    private array         $appControllerDirectory = [__DIR__.'/../../../../controller'];
+    private array         $appControllerDirectory = array();
 
     /**
      * @param string $key
@@ -47,7 +49,7 @@ class Application
         if (!array_key_exists($key, self::$instances)) {
             self::$instances[$key] = new self();
             self::$instances[$key]->key = $key;
-
+            self::$instances[$key]->loadAyumilaYaml();
             ApplicationController::create()->registerApplication(self::$instances[$key]);
         }
 
@@ -63,6 +65,22 @@ class Application
 
         // set_error_handler("AyumilaErrorHandler", E_ALL);
         register_shutdown_function("AyumilaShutdownFunction");
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    private function loadAyumilaYaml(): array
+    {
+        $ayumilaYaml = Yaml::parseFile(__DIR__.'/../../../../config/ayumila.yaml');
+        try{
+            $this->appControllerDirectory = $ayumilaYaml['Ayumila']['Controller']['Path'];
+        }catch (Exception $ex)
+        {
+            throw new Exception('The entry Ayumila > Controller > Path must exist in the Ayumila yml.');
+        }
+        return $ayumilaYaml;
     }
 
     /**
