@@ -6,7 +6,7 @@ ini_set("date.timezone", "Europe/Berlin");
 require(__DIR__ . "/../../../../autoload.php");
 
 use Ayumila\Classes\Helper;
-use Ayumila\Schedule\ScheduleAbstract;
+use Ayumila\Schedule\ScheduleInterface;
 use Ayumila\Schedule\Trigger;
 use Symfony\Component\Yaml\Yaml;
 
@@ -56,7 +56,7 @@ while(true)
             if(class_exists($scheduleClass) && !in_array($scheduleClass, $processList))
             {
                 $schedule = new $scheduleClass;
-                if($schedule instanceof ScheduleAbstract)
+                if($schedule instanceof ScheduleInterface)
                 {
                     $trigger = $schedule->trigger();
                     if(isTrigger($trigger, $date))

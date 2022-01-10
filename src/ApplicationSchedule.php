@@ -39,7 +39,7 @@ class ApplicationSchedule
             {
                 if($force)
                 {
-                    // exist a ScheduleAbstract-Process, then kill this
+                    // exist a ScheduleInterface-Process, then kill this
                     $pid = apcu_fetch('app_schedule_pid');
                     if($pid)
                     {
@@ -47,7 +47,7 @@ class ApplicationSchedule
                     }
                 }
 
-                // is a ScheduleAbstract-ProcessPid active?
+                // is a ScheduleInterface-ProcessPid active?
                 $pid = $this->processList();
 
 
@@ -58,10 +58,10 @@ class ApplicationSchedule
                         throw new AyumilaException('Failed to write app_schedule_pid to the apcu cache');
                     }
                 }else{
-                    // start a new ScheduleAbstract-Process
+                    // start a new ScheduleInterface-Process
                     $this->executeProcess();
 
-                    // get the ScheduleAbstract-ProcessPid
+                    // get the ScheduleInterface-ProcessPid
                     $pid = $this->processList();
 
                     if($pid)

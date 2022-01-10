@@ -2,7 +2,7 @@
 
 namespace Ayumila;
 
-use Ayumila\Abstract\SecurityAbstract;
+use Ayumila\Interfaces\SecurityInterface;
 use Ayumila\Exceptions\AyumilaException;
 use Ayumila\Traits\DefaultResponse;
 use Ayumila\Traits\SingletonStandard;
@@ -62,10 +62,10 @@ class ApplicationSecurity
     }
 
     /**
-     * @param SecurityAbstract|null $securityClass
+     * @param SecurityInterface|null $securityClass
      * @return bool
      */
-    public static function startSecurityClass(?SecurityAbstract $securityClass = null): bool
+    public static function startSecurityClass(?SecurityInterface $securityClass = null): bool
     {
         $instance = self::create();
 
@@ -73,7 +73,7 @@ class ApplicationSecurity
         {
             return $securityClass->run();
 
-        }elseif($instance->securityClass instanceof SecurityAbstract)
+        }elseif($instance->securityClass instanceof SecurityInterface)
         {
             return (new $instance->securityClass)->run();
         }

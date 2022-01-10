@@ -203,7 +203,7 @@ class Application
         /** sends the log at the end of the application */
         ApplicationLog::send();
 
-        /** ScheduleAbstract planer */
+        /** ScheduleInterface planer */
         ApplicationSchedule::create()->run();
 
         /** delete all initialised classes */
