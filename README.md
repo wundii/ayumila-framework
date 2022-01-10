@@ -24,6 +24,8 @@ composer.json
   * bugfix Schedule Class
 * 0.1.0
   * release
+## What does the name Ayumila mean?
+The name Ayumila is a tribute to our two cats Ayumi and Mila :) Ayumi is a British Shorthair and Mila is a Russian Blue cat.They were born in 2020.
 
 ## License
 This project is licensed under the MIT License
