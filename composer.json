@@ -2,6 +2,7 @@
     "name": "wundii/ayumila",
     "version": "0.1.3",
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Andreas Wunderwald",
