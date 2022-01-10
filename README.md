@@ -4,22 +4,22 @@ A small open source microframework for PHP with any Symfony libraries, Propel OR
 ## Installation
 composer.json
 ```
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/wundii/ayumila.git"
-        }
-    ],
-    "require": {
-        "wundii/ayumila": "~0.1"
+"repositories": [
+    {
+        "type": "git",
+        "url": "https://github.com/wundii/ayumila.git"
     }
+],
+"require": {
+    "wundii/ayumila": "~0.1"
+}
 ```
 
 ## Version History
 * 0.1.3
-  * refactor dependent Security Class from Abstract to Interface
+  * refactor dependent Security extends Class from Abstract to Interface
 * 0.1.2
-  * refactor dependent Schedule Class from Abstract to Interface
+  * refactor dependent Schedule extends Class from Abstract to Interface
 * 0.1.1
   * bugfix Schedule Class
 * 0.1.0
