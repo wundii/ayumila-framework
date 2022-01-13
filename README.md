@@ -11,11 +11,14 @@ composer.json
     }
 ],
 "require": {
-    "wundii/ayumila": "~0.1"
+    "wundii/ayumila": "~v0.1"
 }
 ```
 
 ## Version History
+* 0.1.4
+  * bugfix Toast Class
+  * new Class ShellExec
 * 0.1.3
   * refactor dependent Security extends Class from Abstract to Interface
 * 0.1.2
