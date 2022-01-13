@@ -18,7 +18,7 @@ class Controller
      * @param string $content
      * @return void
      */
-    protected function addToast(string $status, string $title, string $content): void
+    protected function addToast(string $status, string $title, string $content = ''): void
     {
         $status = strtolower(trim($status));
         $bootstrapStatus = [

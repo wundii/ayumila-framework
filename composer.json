@@ -1,5 +1,5 @@
 {
-    "name": "wundii/ayumila",
+    "name": "wundii/ayumila-framework",
     "version": "0.1.3",
     "license": "MIT",
     "minimum-stability": "dev",
@@ -20,7 +20,8 @@
         "twig/twig": "^2.0",
         "ext-mysqli": "*",
         "ext-apcu": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-simplexml": "*"
     },
     "autoload": {
         "psr-4": {
