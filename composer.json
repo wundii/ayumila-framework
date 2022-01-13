@@ -1,6 +1,6 @@
 {
     "name": "wundii/ayumila-framework",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "license": "MIT",
     "minimum-stability": "dev",
     "authors": [
@@ -21,7 +21,9 @@
         "ext-mysqli": "*",
         "ext-apcu": "*",
         "ext-pdo": "*",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "ext-mbstring": "*",
+        "ext-iconv": "*"
     },
     "autoload": {
         "psr-4": {

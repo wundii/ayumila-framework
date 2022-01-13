@@ -11,7 +11,7 @@ class ShellExec
     public const STRING = 'string';
     public const XML    = 'xml';
 
-    private ?string $result = '';
+    private ?string $result = null;
     private array   $error  = array();
 
     /**
@@ -19,9 +19,14 @@ class ShellExec
      */
     public function run(string $command): self
     {
-        $result = shell_exec($command);
+        if($command)
+        {
+            $result = shell_exec($command);
 
-        $this->result = $result;
+            $this->result = $result;
+        }else{
+            $this->error[] = 'to execute the shell_exec you have to pass a command';
+        }
 
         return $this;
     }

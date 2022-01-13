@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.5
+  * bugfix ShellExec Class
 * 0.1.4
   * bugfix Toast Class
   * new Class ShellExec

@@ -247,7 +247,7 @@ class Helper
      * @param mixed $inputString
      * @return string
      */
-    public static function replaceSteuerzeichen(mixed $inputString):string
+    public static function replaceControlCharacter(mixed $inputString):string
     {
         /**
          * ASCII Zeichen ohne Störfaktor für die Weiterverarbeitung im Infinity
