@@ -7,11 +7,11 @@ composer.json
 "repositories": [
     {
         "type": "git",
-        "url": "https://github.com/wundii/ayumila.git"
+        "url": "https://github.com/wundii/ayumila-framework.git"
     }
 ],
 "require": {
-    "wundii/ayumila": "~v0.1"
+    "wundii/ayumila-framework": "~v0.1"
 }
 ```
 
