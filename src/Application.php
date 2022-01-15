@@ -170,6 +170,9 @@ class Application
         /** initialise and start the Router */
         Router::create($this)->run();
 
+        /** set ResponseDefault */
+        Response::setResponseContentTypeByRouter();
+
         /** change the Response Content-Type to ResponseApplication */
         if($applicationResponse){
             Response::setResponseContentType(ResponseApplication::create());

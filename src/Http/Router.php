@@ -194,7 +194,8 @@ class Router
             if (preg_match("%^{$route}/?$%", $this->path, $matches) === 1)
             {
                 $routeElement      = new Route();
-                $coreRouteResponse = CoreEngineData::getTwig($class['requestMethods'], $class['requestUrl']);
+                $coreRouteResponse = CoreEngineData::getRouteResponse($class['requestMethods'], $class['requestUrl']);
+                $coreRouteTwig     = CoreEngineData::getTwig($class['requestMethods'], $class['requestUrl']);
 
                 $routeElement->routeClass          = $class['class'];
                 $routeElement->routeAuthentication = $class['authentication'];
@@ -202,8 +203,8 @@ class Router
                 $routeElement->routePrivate        = $class['private'];
                 $routeElement->routeMethod         = $class['method'];
                 $routeElement->routeAction         = $class['action'];
-                $routeElement->routeResponse       = CoreEngineData::getRouteResponse($class['requestMethods'], $class['requestUrl']);
-                $routeElement->routeTwig           = !$coreRouteResponse ? $routeElement->routeResponse : $coreRouteResponse;
+                $routeElement->routeResponse       = !$coreRouteResponse ? ResponseTwig::class : $coreRouteResponse;
+                $routeElement->routeTwig           = !$coreRouteTwig ? $routeElement->routeResponse : $coreRouteTwig; // @todo $routeElement->routeResponse?! :>
 
                 // path delete
                 unset($matches[0]);

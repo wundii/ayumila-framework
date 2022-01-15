@@ -167,6 +167,20 @@ class Response
     }
 
     /**
+     * @return void
+     * @throws AyumilaException
+     */
+    public static function setResponseContentTypeByRouter(): void
+    {
+        if(class_exists(RouterData::getRouteResponse()))
+        {
+            $instance = self::create();
+            $responseType = call_user_func(RouterData::getRouteResponse().'::create');
+            $instance::setResponseContentType($responseType);
+        }
+    }
+
+    /**
      * @return string|null
      * @throws AyumilaException
      */
