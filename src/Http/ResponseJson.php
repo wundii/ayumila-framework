@@ -42,7 +42,7 @@ class ResponseJson extends ResponseAbstract
             "Status"        => $this->getStatus() ? 'ok' : 'error',
             "RequestMethod" => RequestData::getRequestMethod(),
             "DataCount"     => $this->getDataCount(),
-            "DataSets"      => $dataSets,
+            "Data"          => $dataSets,
         ];
 
         $outputData = $this->getAddOutputAddonData($outputData);
@@ -64,7 +64,7 @@ class ResponseJson extends ResponseAbstract
             'Error',
             'Exception',
             'DataCount',
-            'DataSets',
+            'Data',
         ];
 
         return Helper::sortArrayByArray($outputData, $orderArray);
