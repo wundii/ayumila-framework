@@ -16,6 +16,10 @@ composer.json
 ```
 
 ## Version History
+* 0.1.6
+  * bugfix Validate Class
+  * bugfix Router Class
+  * bugfix ResponseJson Class
 * 0.1.5
   * bugfix ShellExec Class
 * 0.1.4
