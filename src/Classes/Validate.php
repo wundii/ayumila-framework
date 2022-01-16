@@ -461,7 +461,7 @@ class Validate extends ValidateProcess
         {
             $array = $this->getREQUEST($key);
 
-            if($array == 'is_array' || $this->isOptional($key))
+            if(is_array($array) || $array == 'is_array' || $this->isOptional($key))
             {
                 return true;
             }
