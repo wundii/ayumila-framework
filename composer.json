@@ -1,8 +1,7 @@
 {
     "name": "wundii/ayumila-framework",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "license": "MIT",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Andreas Wunderwald",
@@ -14,9 +13,9 @@
         "league/oauth2-google": "~3.0",
         "php-amqplib/php-amqplib": "~v3.1.0",
         "php-di/php-di": "~6.3",
-        "phpunit/phpunit": "~9",
         "propel/propel": "~2.0.0-beta1",
         "symfony/monolog-bundle": "^3.7",
+        "phpunit/phpunit": "~9",
         "twig/twig": "^2.0",
         "ext-mysqli": "*",
         "ext-apcu": "*",
@@ -25,6 +24,7 @@
         "ext-mbstring": "*",
         "ext-iconv": "*"
     },
+    "require-dev": {},
     "autoload": {
         "psr-4": {
             "Ayumila\\": "src/"

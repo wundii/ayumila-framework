@@ -188,8 +188,10 @@ class Router
             preg_match_all('/{[^}]+}/', $route, $paramsMatches);
             $paramsMatches = array_key_exists(0, $paramsMatches) ? $paramsMatches[0] : array();
 
+            $route = str_replace(['%'],['\%'],$route);
+
             // $route = preg_replace('/{[^}]+}/', '(.+)', $route);
-            $route = preg_replace('/{[^}]+}/', '([a-zA-Z0-9]{1,})', $route);
+            $route = preg_replace('/{[^}]+}/', '([a-zA-Z0-9\_\-\%\:]{1,})', $route);
 
             if (preg_match("%^{$route}/?$%", $this->path, $matches) === 1)
             {

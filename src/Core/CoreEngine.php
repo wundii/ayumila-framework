@@ -268,7 +268,7 @@ class CoreEngine
 
                     if (T_DOC_COMMENT === $tokens[$index][0])
                     {
-                        preg_match_all('/\* @(?P<variable>\w+) (?P<value>[\w\s\\\\.{}\/>]+)/', $tokens[$index][1], $matches);
+                        preg_match_all('/\* @(?P<variable>\w+) (?P<value>[\w\s\-_%:\\\\.{}\/>]+)/', $tokens[$index][1], $matches);
 
                         if(isset($matches['variable']) && isset($matches['value']))
                         {

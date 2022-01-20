@@ -154,6 +154,7 @@ class Curl
         // if(strtolower($http) === "https"){
         if(str_starts_with($url, "https://")){
             $this->SSLVerification = true;
+            $port = $port == 80 ? 443 : $port;
         }
 
         $curl = curl_init();

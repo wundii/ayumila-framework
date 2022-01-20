@@ -16,6 +16,10 @@ composer.json
 ```
 
 ## Version History
+* 0.1.7
+  * bugfix Router Class
+  * bugfix CoreEngine Class
+  * bugfix Curl Class
 * 0.1.6
   * bugfix Validate Class
   * bugfix Router Class
