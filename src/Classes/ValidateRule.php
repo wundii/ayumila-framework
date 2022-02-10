@@ -49,10 +49,15 @@ class ValidateRule
     }
 
     /**
-     * @param string $rule
+     * @param array|string $rule
      */
-    public function setRule(string $rule): void
+    public function setRule(array|string $rule): void
     {
+        if(is_array($rule))
+        {
+            $rule = implode('|', $rule);
+        }
+
         $this->rule = $rule;
     }
 }

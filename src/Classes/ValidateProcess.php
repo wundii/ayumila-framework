@@ -21,11 +21,11 @@ abstract class ValidateProcess
 
     /**
      * @param string|null $key
-     * @param string $rule
+     * @param array|string $rule
      * @param bool $isRequest
      * @return $this
      */
-    public function addRuleByRequest(?string $key, string $rule, bool $isRequest = true): self
+    public function addRuleByRequest(?string $key, array|string $rule, bool $isRequest = true): self
     {
         $newRule = new ValidateRule();
         $newRule->setIsRequest($isRequest);
@@ -47,10 +47,10 @@ abstract class ValidateProcess
 
     /**
      * @param mixed $value
-     * @param string $rule
+     * @param array|string $rule
      * @return $this
      */
-    public function addRuleByArgument(mixed $value, string $rule): self
+    public function addRuleByArgument(mixed $value, array|string $rule): self
     {
         $value = is_object($value) ? $value::class : $value;
         $value = is_array($value)  ? 'is_array'    : $value;

@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.8
+  * Validate Class - AddRules accept array with rules
 * 0.1.7
   * bugfix Router Class
   * bugfix CoreEngine Class
