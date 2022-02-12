@@ -146,12 +146,23 @@ class RequestData extends Request
     }
 
     /**
-     * @return array
+     * @param string|null $key
+     * @return mixed
      * @throws AyumilaException
      */
-    public static function getFILES():array
+    public static function getFILES(string|null $key = null): mixed
     {
         $instance = Request::create();
+
+        if($key){
+            if(array_key_exists($key, $instance->var_FILES))
+            {
+                return $instance->var_FILES[$key];
+            }else{
+                return null;
+            }
+        }
+
         return $instance->var_FILES;
     }
 
