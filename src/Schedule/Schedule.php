@@ -6,7 +6,7 @@ ini_set("date.timezone", "Europe/Berlin");
 require(__DIR__ . "/../../../../autoload.php");
 
 use Ayumila\Classes\Helper;
-use Ayumila\Schedule\ScheduleInterface;
+use Ayumila\Interfaces\ScheduleInterface;
 use Ayumila\Schedule\Trigger;
 use Symfony\Component\Yaml\Yaml;
 

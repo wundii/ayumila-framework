@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.10
+  * bugfix Schedule Runner
 * 0.1.9
   * bugfix Request Class
 * 0.1.8
