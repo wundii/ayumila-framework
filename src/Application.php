@@ -41,16 +41,21 @@ class Application
     /**
      * @param string $key
      * @param RequestMock|null $requestMock
+     * @param bool $devMode
      * @return static
      * @throws AyumilaException
      */
-    public static function create(string $key, ?RequestMock $requestMock = null): self
+    public static function create(string $key, ?RequestMock $requestMock = null, bool $devMode = false): self
     {
         if (!array_key_exists($key, self::$instances)) {
             self::$instances[$key] = new self();
             self::$instances[$key]->key = $key;
             self::$instances[$key]->loadAyumilaYaml();
             ApplicationController::create()->registerApplication(self::$instances[$key]);
+            if($devMode)
+            {
+                ApplicationController::create()->setDevMode();
+            }
         }
 
         self::$instances[$key]->requestMock = $requestMock;

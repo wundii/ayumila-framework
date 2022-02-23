@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.11
+  * devMode implemented in ApplicationController
 * 0.1.10
   * bugfix Schedule Runner
 * 0.1.9

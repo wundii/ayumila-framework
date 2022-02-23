@@ -13,6 +13,7 @@ class ApplicationController {
     protected array        $applicationKeys       = array();
     protected array        $applicationMultitons  = array();
     protected string       $currentApplicationKey = '';
+    protected bool         $devMode               = false;
 
     /**
      * @param Application $app
@@ -146,6 +147,15 @@ class ApplicationController {
             throw new AyumilaException('delete Application, not all static classes have been deleted');
         }
 
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function setDevMode(): self
+    {
+        $this->devMode = true;
         return $this;
     }
 }

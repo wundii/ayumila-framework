@@ -3,6 +3,7 @@
 namespace Ayumila\Classes;
 
 use Ayumila\Application;
+use Ayumila\ApplicationControllerData;
 use Ayumila\ApplicationLog;
 use Ayumila\Exceptions\AyumilaException;
 use Ayumila\Http\RequestData;
@@ -81,8 +82,11 @@ class Controller
 
         ApplicationLog::send(true);
 
-        header("Location: {$uri}");
-        die();
+        if(!ApplicationControllerData::isDevMode())
+        {
+            header("Location: {$uri}");
+            die();
+        }
     }
 
     /**

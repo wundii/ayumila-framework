@@ -76,4 +76,13 @@ class ApplicationControllerData extends ApplicationController{
             return ApplicationControllerData::getCurrantApplicationKey();
         }
     }
+
+    /**
+     * @return bool
+     */
+    public static function isDevMode(): bool
+    {
+        $instance = self::create();
+        return $instance->devMode;
+    }
 }
