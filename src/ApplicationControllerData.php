@@ -39,6 +39,15 @@ class ApplicationControllerData extends ApplicationController{
     }
 
     /**
+     * @return array
+     */
+    public static function getApplicationSingletons(): array
+    {
+        $instance = self::create();
+        return $instance->applicationSingletons;
+    }
+
+    /**
      * @return int
      */
     public static function getCurrentApplicationLayer(): int

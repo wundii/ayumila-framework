@@ -12,6 +12,7 @@ class ApplicationController {
 
     protected array        $applicationKeys       = array();
     protected array        $applicationMultitons  = array();
+    protected array        $applicationSingletons = array();
     protected string       $currentApplicationKey = '';
     protected bool         $devMode               = false;
 
@@ -42,7 +43,7 @@ class ApplicationController {
      * @return array
      * @throws AyumilaException
      */
-    public static function registerMultiton(string $applicationKey, string $className ):array
+    public static function registerMultiton( string $applicationKey, string $className ):array
     {
         $instance = self::create();
 
@@ -64,6 +65,23 @@ class ApplicationController {
         }
 
         return $instance->applicationMultitons;
+    }
+
+    /**
+     * @param string $className
+     * @return array
+     */
+    public static function registerSingleton( string $className ):array
+    {
+        $instance = self::create();
+
+        if(!in_array($className, $instance->applicationSingletons))
+        {
+            $instance->applicationSingletons[] = $className;
+
+        }
+
+        return $instance->applicationSingletons;
     }
 
     /**
@@ -90,6 +108,7 @@ class ApplicationController {
 
             $this->deleteMultitons($app);
             $this->deleteApplication($app);
+            $this->deleteSingletons();
 
         }else{
             throw new AyumilaException('Application '.$key.' not found');
@@ -122,6 +141,35 @@ class ApplicationController {
 
             }else{
                 throw new AyumilaException('After delete Multitons, not all static classes have been deleted');
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * @throws AyumilaException
+     */
+    public function deleteSingletons(): self
+    {
+        if(!$this->applicationMultitons)
+        {
+            /** unset all Singleton when Multitons is clear */
+            foreach ($this->applicationSingletons as $key => $value)
+            {
+                if($value !== ApplicationController::class)
+                {
+                    $value::delete();
+                    unset($this->applicationSingletons[$key]);
+                }
+            }
+
+            $singletonWithoutController = array_filter($this->applicationSingletons, function ($value){return $value !== ApplicationController::class;});
+
+            if (count($singletonWithoutController) !== 0)
+            {
+                throw new AyumilaException('After delete Singleton, not all static classes have been deleted');
             }
         }
 

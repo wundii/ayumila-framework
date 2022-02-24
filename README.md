@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.12
+  * registration Framework-Singletons
 * 0.1.11
   * devMode implemented in ApplicationController
 * 0.1.10

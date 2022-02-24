@@ -23,6 +23,7 @@ trait SingletonStandard
     {
         if (self::$instance === null) {
             self::$instance = new self();
+            ApplicationController::registerSingleton(self::class);
         }
         return self::$instance;
     }
