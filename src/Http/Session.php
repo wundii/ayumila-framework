@@ -41,7 +41,7 @@ class Session
     {
         if (self::$instance !== null)
         {
-            if(isset($_SESSION) && array_keys($_SESSION))
+            if(php_sapi_name() === "cli" && isset($_SESSION) && array_keys($_SESSION))
             {
                 foreach ($_SESSION AS $key => $session)
                 {
