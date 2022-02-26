@@ -35,6 +35,24 @@ class Session
     }
 
     /**
+     * overwrite SingletonStandard->delete()
+     */
+    public static function delete(): void
+    {
+        if (self::$instance !== null)
+        {
+            if(isset($_SESSION) && array_keys($_SESSION))
+            {
+                foreach ($_SESSION AS $key => $session)
+                {
+                    unset($_SESSION[$key]);
+                }
+            }
+            self::$instance = null;
+        }
+    }
+
+    /**
      * @param string $key
      * @param mixed $value
      * @return mixed
