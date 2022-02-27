@@ -64,4 +64,23 @@ class ApplicationLog
             }
         }
     }
+
+    /**
+     * @param string $status // exactly
+     * @param string $description // str_contains
+     * @return bool
+     */
+    public static function isLogExists(string $status, string $description): bool
+    {
+        $instance = self::create();
+        foreach($instance->logs AS $log)
+        {
+            if($log['status'] == $status && str_contains($log['description'], $description))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

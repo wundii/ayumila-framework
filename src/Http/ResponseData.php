@@ -34,16 +34,23 @@ class ResponseData extends Response
     }
 
     /**
+     * @param string|null $key
      * @return mixed
      * @throws AyumilaException
      */
-    public static function getData(): mixed
+    public static function getData(?string $key = null): mixed
     {
         $instance = self::create();
 
         if($instance->obj instanceof ResponseAbstract)
         {
-            return $instance->obj->getData();
+            $data = $instance->obj->getData();
+            if($key && is_array($data) && array_key_exists($key, $data))
+            {
+                return $data[$key];
+            }else{
+                return $data;
+            }
         }
 
         return null;

@@ -129,7 +129,7 @@ class Validate extends ValidateProcess
     {
         if($this->isREQUEST($key))
         {
-            if(mb_strlen($this->getREQUEST($key)) >= $length)
+            if(is_string($this->getREQUEST($key)) && mb_strlen($this->getREQUEST($key)) >= $length)
             {
                 return true;
             }
@@ -151,7 +151,7 @@ class Validate extends ValidateProcess
     {
         if($this->isREQUEST($key))
         {
-            if(mb_strlen($this->getREQUEST($key)) <= $length)
+            if(is_string($this->getREQUEST($key)) && mb_strlen($this->getREQUEST($key)) <= $length)
             {
                 return true;
             }
@@ -214,7 +214,7 @@ class Validate extends ValidateProcess
      */
     protected function valid_url(?string $key): bool
     {
-        if($this->isREQUEST($key))
+        if($this->isREQUEST($key) && is_string($this->getREQUEST($key)))
         {
             $parsUrl = parse_url($this->getREQUEST($key));
 
@@ -243,7 +243,7 @@ class Validate extends ValidateProcess
      */
     protected function valid_email(?string $key): bool
     {
-        if($this->isREQUEST($key))
+        if($this->isREQUEST($key) && is_string($this->getREQUEST($key)))
         {
             $email = $this->getREQUEST($key);
 
@@ -290,7 +290,7 @@ class Validate extends ValidateProcess
     {
         if($this->isREQUEST($key))
         {
-            if(preg_match('/^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/',$this->getREQUEST($key)))
+            if(is_string($this->getREQUEST($key)) && preg_match('/^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/',$this->getREQUEST($key)))
             {
                 return true;
             }
@@ -310,7 +310,7 @@ class Validate extends ValidateProcess
     {
         if($this->isREQUEST($key))
         {
-            if(preg_match('/^.*(?=.*[a-z])(?=.*[A-Z]).*$/',$this->getREQUEST($key)))
+            if(is_string($this->getREQUEST($key)) && preg_match('/^.*(?=.*[a-z])(?=.*[A-Z]).*$/',$this->getREQUEST($key)))
             {
                 return true;
             }
@@ -332,21 +332,25 @@ class Validate extends ValidateProcess
         if($this->isREQUEST($key))
         {
             $date     = $this->getREQUEST($key);
-            $datetime = DateTime::createFromFormat($format, $date);
 
-            if($datetime && $datetime->format($format) == $date)
+            if(is_string($this->getREQUEST($key)))
             {
-                return true;
-            }
+                $datetime = DateTime::createFromFormat($format, $date);
 
-            /** from 01-31 > 1-31; 01-12 > 1-12; 00-23 > 0-23 */
-            $format = str_replace(['d','m','H'], ['j','n', 'G'], $format);
+                if($datetime && $datetime->format($format) == $date)
+                {
+                    return true;
+                }
 
-            $datetime = DateTime::createFromFormat($format, $date);
+                /** from 01-31 > 1-31; 01-12 > 1-12; 00-23 > 0-23 */
+                $format = str_replace(['d','m','H'], ['j','n', 'G'], $format);
 
-            if($datetime && $datetime->format($format) == $date || $this->isOptional($key))
-            {
-                return true;
+                $datetime = DateTime::createFromFormat($format, $date);
+
+                if($datetime && $datetime->format($format) == $date || $this->isOptional($key))
+                {
+                    return true;
+                }
             }
 
             $this->addError($this->geErrorOutputByMethod(__FUNCTION__),  $this->getREQUEST($key));
@@ -420,7 +424,7 @@ class Validate extends ValidateProcess
             }
 
             $this->addError($this->geErrorOutputByMethod(__FUNCTION__));
-        return false;
+            return false;
         }
 
 

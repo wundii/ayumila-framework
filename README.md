@@ -16,6 +16,10 @@ composer.json
 ```
 
 ## Version History
+* 0.1.14
+  * bugfix Validate Class
+  * new Method in the ApplicationLog Class
+  * extension of a Method in the ResponseData Class
 * 0.1.13
   * bugfix Session Class
 * 0.1.12
