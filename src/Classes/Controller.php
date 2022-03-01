@@ -8,8 +8,10 @@ use Ayumila\ApplicationLog;
 use Ayumila\Exceptions\AyumilaException;
 use Ayumila\Http\RequestData;
 use Ayumila\Http\RequestMock;
+use Ayumila\Http\Response;
 use Ayumila\Http\Session;
 use Ayumila\Http\SessionRedirect;
+use Exception;
 
 class Controller
 {
@@ -98,5 +100,42 @@ class Controller
     protected function callApplication(string $key, RequestMock $mock): mixed
     {
         return Application::create($key, $mock)->miao(true);
+    }
+
+    /**
+     * @param string $tokenId
+     * @param string|null $inputName
+     * @return bool
+     * @throws AyumilaException
+     */
+    protected function isCsrfTokenValid(string $tokenId, ?string $inputName = null): bool
+    {
+        $token = $inputName ? RequestData::getREQUEST($inputName) : RequestData::getREQUEST('csrf_token');
+
+        $tokenValidStatus = CsrfManager::create()->isCsrfEqual($tokenId, $token);
+        if(!$tokenValidStatus)
+        {
+            ApplicationLog::addLog('Csrf-Token', 'Die Token-Validierung war nicht erfolgreich.', [$tokenId, $token, Session::create()->getSessionDatalist('csrfToken')]);
+
+            Response::addDataWithKey($inputName ?? 'csrf_token', $token);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string $tokenId
+     * @param string|null $inputName
+     * @return string
+     * @throws AyumilaException
+     * @throws Exception
+     */
+    protected function createCsrfTokenTwigPost(string $tokenId, ?string $inputName = null): string
+    {
+        $token = CsrfManager::create()->getCsrfToken($tokenId);
+        Response::addDataWithKey($inputName ?? 'csrf_token', $token);
+
+        return $token;
     }
 }

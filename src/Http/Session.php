@@ -94,17 +94,23 @@ class Session
     }
 
     /**
-     * @return array
+     * @param string|null $sessionKey
+     * @return array|string|null
      */
-    public function getSessionDatalist(): array
+    public function getSessionDatalist(?string $sessionKey = null): array|string|null
     {
-        $returnArray = array();
+        $sessionData = array();
         foreach ($_SESSION as $key => $value)
         {
-            $returnArray[$key] = $value;
+            $sessionData[$key] = $value;
         }
 
-        return $returnArray;
+        if($sessionKey)
+        {
+            $sessionData = [ $sessionKey => array_key_exists($sessionKey, $sessionData) ? $sessionData[$sessionKey] : null ];
+        }
+
+        return $sessionData;
     }
 
     /**

@@ -1,6 +1,6 @@
 {
     "name": "wundii/ayumila-framework",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "license": "MIT",
     "authors": [
         {
@@ -16,7 +16,7 @@
         "propel/propel": "~2.0.0-beta1",
         "symfony/monolog-bundle": "^3.7",
         "phpunit/phpunit": "~9",
-        "twig/twig": "^2.0",
+        "twig/twig": "~3",
         "ext-mysqli": "*",
         "ext-apcu": "*",
         "ext-pdo": "*",

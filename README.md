@@ -16,6 +16,11 @@ composer.json
 ```
 
 ## Version History
+* 0.1.15
+  * added Csrf Classes
+  * adjusted the Session Class
+  * adjusted the Controller Class
+  * changed in composer.json Twig: from v2 to v3
 * 0.1.14
   * bugfix Validate Class
   * new Method in the ApplicationLog Class
