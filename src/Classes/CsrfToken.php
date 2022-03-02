@@ -8,6 +8,7 @@ final class CsrfToken implements CsrfTokenInterface
 {
     private string $id;
     private string $token;
+    private int    $timestamp;
 
     /**
      * @param string $id
@@ -15,8 +16,9 @@ final class CsrfToken implements CsrfTokenInterface
      */
     public function __construct(string $id, string $token)
     {
-        $this->id    = $id;
-        $this->token = $token;
+        $this->id        = $id;
+        $this->token     = $token;
+        $this->timestamp = time();
     }
 
     /**
@@ -33,6 +35,14 @@ final class CsrfToken implements CsrfTokenInterface
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimestamp(): int
+    {
+        return $this->timestamp;
     }
 
     /**

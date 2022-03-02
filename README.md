@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.16
+  * bugfix Csrf Classes
 * 0.1.15
   * added Csrf Classes
   * adjusted the Session Class

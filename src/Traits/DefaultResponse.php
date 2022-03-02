@@ -39,11 +39,6 @@ trait DefaultResponse
         $defaultResponseClass       = $this->defaultResponseCollection[$currentResponseClassName]['class'];
         $defaultResponseData        = $this->defaultResponseCollection[$currentResponseClassName]['data'];
         $defaultResponseForwardData = $this->defaultResponseCollection[$currentResponseClassName]['forwardData'];
-        //
-        // var_dump($currentResponseClassName);
-        // var_dump($defaultResponseForwardData);
-        // var_dump($defaultResponseData);
-        // exit();
 
         Response::setResponseContentType($defaultResponseClass);
         if($currentResponseData && $defaultResponseForwardData)

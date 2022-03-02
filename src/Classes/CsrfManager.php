@@ -32,7 +32,7 @@ final class CsrfManager implements CsrfManagerInterface
             return false;
         }
 
-        return hash_equals($this->getStorageCsrfToken($tokenId), $token);
+        return hash_equals((string)$this->getStorageCsrfToken($tokenId), $token);
     }
 
     /**
@@ -44,9 +44,11 @@ final class CsrfManager implements CsrfManagerInterface
     {
         $token = hash_hmac('sha3-256', $tokenId, random_bytes(32));
 
-        $this->setStorageCsrfToken($tokenId, $token);
+        $csrfToken = new CsrfToken($tokenId, $token);
 
-        return new CsrfToken($tokenId, $token);
+        $this->setStorageCsrfToken($tokenId, $csrfToken);
+
+        return $csrfToken;
     }
 
     /**
@@ -65,14 +67,23 @@ final class CsrfManager implements CsrfManagerInterface
 
     /**
      * @param string $tokenId
-     * @param string $token
+     * @param CsrfTokenInterface $csrfToken
      * @return void
      */
-    private function setStorageCsrfToken(string $tokenId, string $token): void
+    private function setStorageCsrfToken(string $tokenId, CsrfTokenInterface $csrfToken): void
     {
-        $csrfToken = Session::create()->csrfToken ?? array();
-        $csrfToken[$tokenId] = $token;
-        Session::create()->csrfToken = $csrfToken;
+        $token = Session::create()->csrfToken ?? array();
+
+        foreach ($token AS $tokenEntityId => $tokenEntity)
+        {
+            if($tokenEntity instanceof CsrfTokenInterface && $tokenEntity->getTimestamp() <= time()-60*60)
+            {
+                unset($token[$tokenEntityId]);
+            }
+        }
+
+        $token[$tokenId] = $csrfToken;
+        Session::create()->csrfToken = $token;
     }
 
     /**
