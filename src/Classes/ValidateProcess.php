@@ -23,14 +23,19 @@ abstract class ValidateProcess
      * @param string|null $key
      * @param array|string $rule
      * @param bool $isRequest
+     * @param mixed|null $dataContainer
      * @return $this
      */
-    public function addRuleByRequest(?string $key, array|string $rule, bool $isRequest = true): self
+    public function addRuleByRequest(?string $key, array|string $rule, bool $isRequest = true, mixed $dataContainer = null): self
     {
         $newRule = new ValidateRule();
         $newRule->setIsRequest($isRequest);
         $newRule->setValue($key);
         $newRule->setRule($rule);
+        if(is_array($dataContainer))
+        {
+            $newRule->setDataContainer($dataContainer);
+        }
 
         if(!in_array($newRule, $this->rules))
         {
@@ -52,11 +57,12 @@ abstract class ValidateProcess
      */
     public function addRuleByArgument(mixed $value, array|string $rule): self
     {
+        $tmpValue = $value;
         $value = is_object($value) ? $value::class : $value;
         $value = is_array($value)  ? 'is_array'    : $value;
 
         $this->direct = true;
-        $this->addRuleByRequest($value, $rule, false);
+        $this->addRuleByRequest($value, $rule, false, $tmpValue);
         return $this;
     }
 
@@ -154,10 +160,11 @@ abstract class ValidateProcess
 
             $key      = $rule->getValue();
             $keyRules = explode('|', $rule->getRule());
+            $data     = $rule->getDataContainer();
 
             foreach ($keyRules AS $keyRule)
             {
-                preg_match('/(?<method>\w+)(\[(?<argument>[a-zA-Z0-9\-_]+)])?/', $keyRule, $matches);
+                preg_match('/(?<method>\w+)(\[(?<argument>[a-zA-Z0-9,\-_]+)])?/', $keyRule, $matches);
 
                 $keyRuleMethod   = array_key_exists('method', $matches)   ? $matches['method']   : null;
                 $keyRuleArgument = array_key_exists('argument', $matches) ? $matches['argument'] : null;
@@ -165,6 +172,11 @@ abstract class ValidateProcess
                 if($keyRuleMethod && method_exists(Validate::class, $keyRuleMethod))
                 {
                     $arguments = $keyRuleArgument ? [$key, $keyRuleArgument] : [$key];
+                    if($data !== null)
+                    {
+                        $arguments[] = $data;
+                    }
+
                     $boolReturn = call_user_func_array(array($this, $keyRuleMethod), $arguments);
 
                     if(!$boolReturn && $this->isBreakFirstFalse())

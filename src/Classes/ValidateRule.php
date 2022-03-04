@@ -4,9 +4,10 @@ namespace Ayumila\Classes;
 
 class ValidateRule
 {
-    private bool $isRequest = true;
-    private mixed $value;
+    private bool   $isRequest = true;
+    private mixed  $value;
     private string $rule;
+    private mixed  $dataContainer = null;
 
     /**
      * @return bool
@@ -59,5 +60,21 @@ class ValidateRule
         }
 
         $this->rule = $rule;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDataContainer(): mixed
+    {
+        return $this->dataContainer;
+    }
+
+    /**
+     * @param mixed $dataContainer
+     */
+    public function setDataContainer(mixed $dataContainer): void
+    {
+        $this->dataContainer = $dataContainer;
     }
 }

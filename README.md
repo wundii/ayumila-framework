@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.18
+  * Validate Class - AddRules PropelPk, findPk and findPks
 * 0.1.17
   * added ClassEnum Trait for php8.0
   * adjusted the Toast Class

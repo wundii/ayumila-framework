@@ -51,6 +51,7 @@ class Validate extends ValidateProcess
             ->setLanguageWithParameter('valid_password_simple', 'The password is not valid')
             ->setLanguageWithParameter('valid_datetime', 'The Date #replace# is not valid')
             ->setLanguageWithParameter('instanceof', 'The Object #object# is not from Class #classname#')
+            ->setLanguageWithParameter('propelPk', 'The PropelPk #pks# is not in Class #classname#')
             ->setLanguageWithParameter('is_bool', 'This Variable is not a bool')
             ->setLanguageWithParameter('is_number', 'This Variable is not numeric')
             ->setLanguageWithParameter('is_string', 'This Variable is not a string')
@@ -372,6 +373,39 @@ class Validate extends ValidateProcess
         }
 
         $this->addError($this->geErrorOutputByMethod(__FUNCTION__),  ['#object#'=>$object,'#classname#'=>$className]);
+        return false;
+    }
+
+    /**
+     * @param ?string $key
+     * @param string $className
+     * @param array $keyArray
+     * @return bool
+     * @throws AyumilaException
+     */
+    protected function propelPk(?string $key, string $className, array $keyArray = array()): bool
+    {
+        if($this->isREQUEST($key))
+        {
+            $array = $this->getREQUEST($key);
+            $pks   = $array == 'is_array' ? $keyArray : [$array];
+
+            $classQuery = str_ends_with($className, 'Query') ? $className : $className.'Query';
+
+            if(class_exists($classQuery))
+            {
+                if(method_exists($classQuery, 'create') && method_exists($classQuery, 'findPks'))
+                {
+                    if($classQuery::create()->findPks($pks)->count() === count($pks))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        $pks = $keyArray ? implode(',', $keyArray) : $key;
+        $this->addError($this->geErrorOutputByMethod(__FUNCTION__),  ['#pks#'=>$pks,'#classname#'=>$className]);
         return false;
     }
 
