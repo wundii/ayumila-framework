@@ -14,11 +14,11 @@ class ToastNotification
     private string $content = '';
 
     /**
-     * @return string
+     * @return ToastStatus
      */
-    public function getStatus(): string
+    public function getStatus(): ToastStatus
     {
-        return (string)$this->status;
+        return $this->status;
     }
 
     /**

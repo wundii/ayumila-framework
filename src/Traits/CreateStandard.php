@@ -7,12 +7,11 @@ use Ayumila\Classes\ToastNotification;
 use Ayumila\Classes\ValidateLanguage;
 use Ayumila\Classes\ValidateLanguageLibrary;
 use Ayumila\Classes\ValidateLanguageLibraryStatic;
-use smarthome\PdoTool;
 
 trait CreateStandard
 {
     /**
-     * @return CreateStandard|Propel|ToastNotification|ValidateLanguage|ValidateLanguageLibrary|ValidateLanguageLibraryStatic|PdoTool
+     * @return CreateStandard|Propel|ToastNotification|ValidateLanguage|ValidateLanguageLibrary|ValidateLanguageLibraryStatic
      */
     public static function create(): self
     {

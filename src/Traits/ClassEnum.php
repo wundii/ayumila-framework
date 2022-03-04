@@ -2,7 +2,6 @@
 
 namespace Ayumila\Traits;
 
-use Ayumila\Classes\ToastStatus;
 use ReflectionClass;
 
 trait ClassEnum
@@ -34,7 +33,7 @@ trait ClassEnum
      */
     public static function tryFrom(string $value): null|self
     {
-        $reflectionClass = new ReflectionClass(ToastStatus::class);
+        $reflectionClass = new ReflectionClass(self::class);
         $constants = $reflectionClass->getConstants();
         if($constants)
         {
