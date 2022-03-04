@@ -3,12 +3,13 @@
 namespace Ayumila\Classes;
 
 use Ayumila\Traits\CreateStandard;
+use Exception;
 
 class ToastNotification
 {
     use CreateStandard;
 
-    private string $status = '';
+    private ToastStatus $status;
     private string $title = '';
     private string $content = '';
 
@@ -17,14 +18,15 @@ class ToastNotification
      */
     public function getStatus(): string
     {
-        return $this->status;
+        return (string)$this->status;
     }
 
     /**
-     * @param string $status
+     * @param ToastStatus $status
      * @return self
+     * @throws Exception
      */
-    public function setStatus(string $status): self
+    public function setStatus(ToastStatus $status): self
     {
         $this->status = $status;
         return $this;

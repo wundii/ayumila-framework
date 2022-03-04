@@ -16,40 +16,26 @@ use Exception;
 class Controller
 {
     /**
-     * @param string $status ['primary','secondary','success','danger','warning','info','light','dark']
+     * @param ToastStatus $status ['primary','secondary','success','danger','warning','info','light','dark']
      * @param string $title
      * @param string $content
      * @return void
+     * @throws Exception
      */
-    protected function addToast(string $status, string $title, string $content = ''): void
+    protected function addToast(ToastStatus $status, string $title, string $content = ''): void
     {
-        $status = strtolower(trim($status));
-        $bootstrapStatus = [
-            'primary',
-            'secondary',
-            'success',
-            'danger',
-            'warning',
-            'info',
-            'light',
-            'dark',
-        ];
+        $session = Session::create();
 
-        if(in_array($status, $bootstrapStatus))
-        {
-            $session = Session::create();
+        $toasts  = is_array($session->toasts) ? $session->toasts : array();
 
-            $toasts  = is_array($session->toasts) ? $session->toasts : array();
+        $newToast = ToastNotification::create()
+            ->setStatus($status)
+            ->setTitle(trim($title))
+            ->setContent(trim($content));
 
-            $newToast = ToastNotification::create()
-                ->setStatus($status)
-                ->setTitle(trim($title))
-                ->setContent(trim($content));
+        $toasts[] = $newToast;
 
-            $toasts[] = $newToast;
-
-            $session->toasts = $toasts;
-        }
+        $session->toasts = $toasts;
     }
 
     /**

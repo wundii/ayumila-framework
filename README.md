@@ -16,6 +16,9 @@ composer.json
 ```
 
 ## Version History
+* 0.1.17
+  * added ClassEnum Trait for php8.0
+  * adjusted the Toast Class
 * 0.1.16
   * bugfix Csrf Classes
 * 0.1.15
