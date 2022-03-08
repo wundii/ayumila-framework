@@ -16,6 +16,9 @@ composer.json
 ```
 
 ## Version History
+* 0.1.19
+  * bugfix Request Class
+  * bugfix Session Class
 * 0.1.18
   * Validate Class - AddRules PropelPk, findPk and findPks
 * 0.1.17

@@ -55,7 +55,7 @@ class Session
     /**
      * @param string $key
      * @param mixed $value
-     * @return mixed
+     * @return void
      */
     public function __set(string $key, mixed $value): void
     {
@@ -127,11 +127,16 @@ class Session
     }
 
     /**
-     * @return void
+     * @return bool
      * @throws AyumilaException
      */
-    public function clearSessionRedirect(): void
+    public function clearSessionRedirect(): bool
     {
+        if(!RouterData::isRouteFound())
+        {
+            return false;
+        }
+
         foreach ($this->getSessionDatalist() AS $key => $data)
         {
             if(str_starts_with($key, 'redirect_'))
@@ -145,5 +150,7 @@ class Session
                 }
             }
         }
+
+        return true;
     }
 }

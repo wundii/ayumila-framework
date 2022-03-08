@@ -37,6 +37,11 @@ class RequestData extends Request
         if($key){
             if(array_key_exists($key, $instance->var_GET))
             {
+                if(is_string($instance->var_GET[$key]))
+                {
+                    return trim($instance->var_GET[$key]);
+                }
+
                 return $instance->var_GET[$key];
             }else{
                 return null;
@@ -69,12 +74,23 @@ class RequestData extends Request
      */
     public static function getPOST( int|string|null $key = null ):mixed
     {
+        $session  = Session::create();
         $instance = Request::create();
         if($key){
             if(array_key_exists($key, $instance->var_POST))
             {
+                if(is_string($instance->var_POST[$key]))
+                {
+                    return trim($instance->var_POST[$key]);
+                }
+
                 return $instance->var_POST[$key];
-            }else{
+
+            }elseif($session instanceof Session && isset($session->{'redirect_'.$key})) {
+
+                return SessionRedirect::getRedirectDataFromSession(self::getRequestUri(), $key);
+
+            }{
                 return null;
             }
         }
@@ -117,6 +133,7 @@ class RequestData extends Request
                 }
 
                 return $instance->var_REQUEST[$key];
+
             }elseif($session instanceof Session && isset($session->{'redirect_'.$key})) {
 
                 return SessionRedirect::getRedirectDataFromSession(self::getRequestUri(), $key);
