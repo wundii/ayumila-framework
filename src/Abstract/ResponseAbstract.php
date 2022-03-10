@@ -132,6 +132,16 @@ abstract class ResponseAbstract
     }
 
     /**
+     * @param string $key
+     * @param mixed $data
+     * @return void
+     */
+    public function overwriteDataWithKey(string $key, mixed $data): void
+    {
+        $this->data[$key] = $data;
+    }
+
+    /**
      * @param mixed $data
      */
     public function setData(mixed $data): void

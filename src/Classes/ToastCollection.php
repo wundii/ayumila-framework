@@ -27,7 +27,7 @@ class ToastCollection
                 {
                     if($toast instanceof ToastNotification)
                     {
-                        $this->collection[] = $toast;
+                        $this->addToastNotification($toast);
                     }
 
                 }
@@ -41,6 +41,16 @@ class ToastCollection
      */
     public function getToastsCollection(): array
     {
+        return $this->collection;
+    }
+
+    /**
+     * @param ToastNotification $toast
+     * @return array
+     */
+    public function addToastNotification(ToastNotification $toast): array
+    {
+        $this->collection[] = $toast;
         return $this->collection;
     }
 

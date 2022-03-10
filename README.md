@@ -16,6 +16,9 @@ composer.json
 ```
 
 ## Version History
+* 0.1.20
+  * adjusted the Toast Class
+  * adjusted the Response Class
 * 0.1.19
   * bugfix Request Class
   * bugfix Session Class

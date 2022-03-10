@@ -108,6 +108,17 @@ class Response
     }
 
     /**
+     * @param string $key
+     * @param mixed $data
+     * @throws AyumilaException
+     */
+    public static function overwriteDataWithKey(string $key, mixed $data): void
+    {
+        $instance = self::create();
+        $instance->obj->overwriteDataWithKey($key, $data);
+    }
+
+    /**
      * @param mixed $data
      * @throws AyumilaException
      */

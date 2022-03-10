@@ -19,23 +19,30 @@ class Controller
      * @param ToastStatus $status ['primary','secondary','success','danger','warning','info','light','dark']
      * @param string $title
      * @param string $content
+     * @param bool $direct
      * @return void
      * @throws Exception
      */
-    protected function addToast(ToastStatus $status, string $title, string $content = ''): void
+    protected function addToast(ToastStatus $status, string $title, string $content = '', bool $direct = false): void
     {
-        $session = Session::create();
-
-        $toasts  = is_array($session->toasts) ? $session->toasts : array();
-
         $newToast = ToastNotification::create()
             ->setStatus($status)
             ->setTitle(trim($title))
             ->setContent(trim($content));
 
-        $toasts[] = $newToast;
+        if($direct && ApplicationControllerData::getCurrantApplicationKey() === ApplicationControllerData::getFirstApplicationKey())
+        {
+            ToastCollection::create()->addToastNotification($newToast);
+            
+        }else{
+            $session = Session::create();
 
-        $session->toasts = $toasts;
+            $toasts  = is_array($session->toasts) ? $session->toasts : array();
+
+            $toasts[] = $newToast;
+
+            $session->toasts = $toasts;
+        }
     }
 
     /**
