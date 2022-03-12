@@ -269,6 +269,7 @@ class RequestData extends Request
     public static function getRouterPathVariable( int|string|null $key = null ):mixed
     {
         if($key){
+            $key  = mb_strtolower($key);
             $path = RouterData::getParametersFromUrlPath();
             if(array_key_exists($key, $path))
             {
