@@ -52,6 +52,7 @@ class Validate extends ValidateProcess
             ->setLanguageWithParameter('valid_datetime', 'The Date #replace# is not valid')
             ->setLanguageWithParameter('instanceof', 'The Object #object# is not from Class #classname#')
             ->setLanguageWithParameter('propelPk', 'The PropelPk #pks# is not in Class #classname#')
+            ->setLanguageWithParameter('fileExists', 'This File is not exists')
             ->setLanguageWithParameter('is_bool', 'This Variable is not a bool')
             ->setLanguageWithParameter('is_number', 'This Variable is not numeric')
             ->setLanguageWithParameter('is_string', 'This Variable is not a string')
@@ -407,6 +408,30 @@ class Validate extends ValidateProcess
         $pks = $keyArray ? implode(',', $keyArray) : $key;
         $this->addError($this->geErrorOutputByMethod(__FUNCTION__),  ['#pks#'=>$pks,'#classname#'=>$className]);
         return false;
+    }
+
+    /**
+     * @param ?string $key
+     * @param string $path
+     * @return bool
+     * @throws AyumilaException
+     */
+    protected function fileExists(?string $key, string $path): bool
+    {
+        if($this->isREQUEST($key))
+        {
+            var_dump($path.$this->getREQUEST($key));
+
+            if(file_exists($path.$this->getREQUEST($key)) || $this->isOptional($key))
+            {
+                return true;
+            }
+
+            $this->addError($this->geErrorOutputByMethod(__FUNCTION__));
+            return false;
+        }
+
+        return true;
     }
 
     /**

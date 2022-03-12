@@ -18,6 +18,7 @@ composer.json
 ## Version History
 * 0.1.21
   * bugfix Request Class
+  * Validate Class - AddRules fileExists
 * 0.1.20
   * adjusted the Toast Class
   * adjusted the Response Class

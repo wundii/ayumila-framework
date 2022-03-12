@@ -164,7 +164,7 @@ abstract class ValidateProcess
 
             foreach ($keyRules AS $keyRule)
             {
-                preg_match('/(?<method>\w+)(\[(?<argument>[a-zA-Z0-9,\-_]+)])?/', $keyRule, $matches);
+                preg_match('/(?<method>\w+)(\[(?<argument>[a-zA-Z0-9,\/\-_]+)])?/', $keyRule, $matches);
 
                 $keyRuleMethod   = array_key_exists('method', $matches)   ? $matches['method']   : null;
                 $keyRuleArgument = array_key_exists('argument', $matches) ? $matches['argument'] : null;
