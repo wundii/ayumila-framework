@@ -6,11 +6,14 @@ use Ayumila\Exceptions\AyumilaException;
 use Ayumila\Traits\CreateStandard;
 use Exception;
 use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Connection\StatementWrapper;
 use \Propel\Runtime\Propel AS PropelRunTime;
 
 class Propel
 {
     use CreateStandard;
+
+    private ?StatementWrapper $stmt = null;
 
     /**
      * @param ObjectCollection $collection
@@ -57,12 +60,14 @@ class Propel
     }
 
     /**
-     * @param array $sqlQuerys
+     * @param array|string $sqlQueries
      * @return bool
      */
-    public function customQuery(array $sqlQuerys): bool
+    public function customQuery(array|string $sqlQueries): bool
     {
-        foreach ($sqlQuerys AS $query)
+        $sqlQueries = is_string($sqlQueries) ? [$sqlQueries] : $sqlQueries;
+
+        foreach ($sqlQueries AS $query)
         {
             if(is_string($query))
             {
@@ -70,6 +75,7 @@ class Propel
                 $stmt = $connection->prepare($query);
                 try{
                     $stmt->execute();
+                    $this->stmt = $stmt;
                 }catch (Exception $ex)
                 {
                     return false;
@@ -80,6 +86,18 @@ class Propel
         }
 
         return true;
+    }
+
+    /**
+     * requires one call to customQuery
+     * @return mixed
+     */
+    public function fetchAll(): mixed
+    {
+        foreach ($this->stmt->fetchAll() AS $data)
+        {
+            yield $data;
+        }
     }
 
     /**

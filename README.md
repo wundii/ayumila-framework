@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.22
+  * adjusted Propel-Ayumila Helper Class
 * 0.1.21
   * bugfix Request Class
   * Validate Class - AddRules fileExists
