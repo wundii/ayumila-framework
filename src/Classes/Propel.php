@@ -94,10 +94,7 @@ class Propel
      */
     public function fetchAll(): mixed
     {
-        foreach ($this->stmt->fetchAll() AS $data)
-        {
-            yield $data;
-        }
+        return $this->stmt->fetchAll();
     }
 
     /**
