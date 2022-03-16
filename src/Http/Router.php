@@ -2,6 +2,7 @@
 
 namespace Ayumila\Http;
 
+use Ayumila\Application;
 use Ayumila\Classes\Helper;
 use Ayumila\Core\CoreEngine;
 use Ayumila\Core\CoreEngineData;
@@ -13,14 +14,16 @@ class Router
 {
     use MultitonStandard;
 
-    private   string $requestMethod = '';
-    private   string $requestUri    = '';
-    private   string $path          = '';
-    private   array  $queries       = array();
-    private   array  $routes        = array();
-    protected Route  $route;
-    protected bool   $routeFound    = false;
-    private   int    $dispatchCount = 0;
+    private   string  $requestMethod          = '';
+    private   string  $requestUri             = '';
+    private   string  $path                   = '';
+    private   array   $queries                = array();
+    private   array   $routes                 = array();
+    private   int     $dispatchCount          = 0;
+    private   ?string $routingFromSingleClass = null;
+
+    protected Route   $route;
+    protected bool    $routeFound             = false;
 
     /**
      * CustomTrait constructor
@@ -32,6 +35,32 @@ class Router
         $this->setDefaultRoute();
         $this->loadServerVariable();
         $this->processUri();
+    }
+
+    /**
+     * @param Application|null $app
+     * @param string|object|null $singleClass
+     * @return $this
+     * @throws AyumilaException
+     */
+    public static function createAboutSingleClass(?Application $app = null, null|string|object $singleClass = null): self
+    {
+        $instance =  self::create($app);
+        $instance->setRoutingFromSingleClass($singleClass);
+        return $instance;
+    }
+
+    /**
+     * @param string|object|null $singleClass
+     */
+    private function setRoutingFromSingleClass(null|string|object $singleClass): void
+    {
+        if(is_object($singleClass))
+        {
+            $singleClass = $singleClass::class;
+        }
+
+        $this->routingFromSingleClass = $singleClass;
     }
 
     /**
@@ -88,14 +117,17 @@ class Router
             $this->path .= '/';
         }
 
-        if (array_key_exists('query', $parseUrl)) {
+        if (array_key_exists('query', $parseUrl))
+        {
             $query = $parseUrl['query'];
             $queryArray = array();
 
             $paraExplode = explode('&', $query);
-            foreach ($paraExplode as $parameter) {
+            foreach ($paraExplode as $parameter)
+            {
                 $varExplode = explode('=', $parameter, 2);
-                if (count($varExplode) === 2) {
+                if (count($varExplode) === 2)
+                {
                     $queryArray[$varExplode[0]] = $varExplode[1];
                 } else {
                     $queryArray[$varExplode[0]] = true;
@@ -135,47 +167,69 @@ class Router
     {
         if (str_starts_with(strtolower($this->path), '/router/list')) {
             $this->loadRoutes(true);
-            foreach ($this->routes as $requestMethods => $routes) {
-                echo "<p>";
-                echo $requestMethods;
 
-                echo "<lu>";
-                foreach ($routes as $route) {
+            $routesOutput = array();
+            foreach ($this->routes as $requestMethods => $routes) {
+                foreach ($routes as $route)
+                {
                     $authentication = Helper::convertToBool($route['authentication']) ? 'true' : 'false';
                     $authorization  = Helper::convertToBool($route['authorization']) ? 'true' : 'false';
                     $private        = Helper::convertToBool($route['private']) ? 'true' : 'false';
 
-                    echo "<li>" . $route['requestUrl'] . " > " . $route['class'] . " (authent: " . $authentication . " authori: " . $authorization . " private: " . $private . " )</li>";
+                    $routesOutput[$requestMethods][] =  $route['requestUrl'] . " > " . $route['class'] . " (authent: " . $authentication . " authori: " . $authorization . " private: " . $private . " )";
+                }
+            }
+
+            foreach ($routesOutput AS $requestMethods => $routes)
+            {
+                echo "<p>";
+                echo $requestMethods;
+                echo "<lu>";
+
+                asort($routes);
+
+                foreach ($routes AS $route)
+                {
+                    echo "<li>" . $route . "</li>";
                 }
                 echo "</lu>";
                 echo "</p>";
             }
+
             exit();
         }
     }
 
     /**
      * @param bool $force
+     * @return bool
      * @throws AyumilaException
      */
-    public function loadRoutes(bool $force = false)
+    public function loadRoutes(bool $force = false): bool
     {
+        if($this->routingFromSingleClass)
+        {
+            CoreEngine::create()->setAppClassFileByClassName($this->routingFromSingleClass)->run(true);
+
+            $this->routes = CoreEngineData::getRoutes();
+            return true;
+        }
+
         if($force)
         {
             CoreEngine::create()->run($force);
         }
 
         $this->routes = CoreEngineData::getRoutes();
+        return true;
     }
 
     /**
-     *
      * @throws AyumilaException
      */
     private function dispatch(array $routes): ?Route
     {
         $routeElement = null;
-
 
         if (!array_key_exists($this->requestMethod, $routes)) {
             throw new AyumilaException('RequestMethod in the routes not found ' . $this->requestMethod);

@@ -13,10 +13,13 @@ class RequestMock{
     private array $var_FILES      = array();
     private array $var_ENV        = array();
 
+    private array   $server             = array();
+    private ?string $serverRequestHttps = null;
+    private array   $header             = array();
+
     /**
      * @param string $requestMethod
      * @param string $uri
-     * @throws AyumilaException
      */
     public function setServer(string $requestMethod, string $uri):void
     {
@@ -28,8 +31,10 @@ class RequestMock{
 
         if(!$requestHost)
         {
-            $requestHost  = RequestData::getHost();
-            $requestHttps = RequestData::getHttps();
+            // $requestHost  = RequestData::getHost();
+            // $requestHttps = RequestData::getHttps();
+            $requestHost  = $_SERVER['HTTP_HOST'];
+            $requestHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'on' : null;
         }
 
         if($requestPort)
@@ -41,47 +46,22 @@ class RequestMock{
             $requestUri .= '?'.$requestQuery;
         }
 
-        if(!$this->var_SERVER)
-        {
-            $this->var_SERVER = RequestData::getSERVER();
-        }
-
         $server = [
             'REQUEST_METHOD' => $requestMethod,
             'REQUEST_URI'    => $requestUri,
             'HTTP_HOST'      => $requestHost,
         ];
 
-        foreach ($server AS $key => $value)
-        {
-            $this->var_SERVER[$key] = $value;
-        }
-
-        if($requestHttps){
-            $this->var_SERVER['HTTPS'] = $requestHttps;
-        }
-
-        if(!$this->var_HEADER)
-        {
-            $this->var_HEADER = RequestData::getHEADER();
-        }
+        $this->server = $server;
+        $this->serverRequestHttps = $requestHttps;
     }
 
     /**
      * @param array $header
-     * @throws AyumilaException
      */
     public function setHeader(array $header):void
     {
-        if(!$this->var_HEADER)
-        {
-            $this->var_HEADER = RequestData::getHEADER();
-        }
-
-        foreach ($header AS $key => $value)
-        {
-            $this->var_HEADER[$key] = $value;
-        }
+        $this->header = $header;
     }
 
     /**
@@ -161,6 +141,20 @@ class RequestMock{
      */
     public function getSERVER(): array
     {
+        if(!$this->var_SERVER)
+        {
+            $this->var_SERVER = RequestData::getSERVER();
+        }
+
+        foreach ($this->server AS $key => $value)
+        {
+            $this->var_SERVER[$key] = $value;
+        }
+
+        if($this->serverRequestHttps){
+            $this->var_SERVER['HTTPS'] = $this->serverRequestHttps;
+        }
+
         return $this->checkOfEmtpyVariable('SERVER');
     }
 
@@ -170,6 +164,16 @@ class RequestMock{
      */
     public function getHEADER(): array
     {
+        if(!$this->var_HEADER)
+        {
+            $this->var_HEADER = RequestData::getHEADER();
+        }
+
+        foreach ($this->header AS $key => $value)
+        {
+            $this->var_HEADER[$key] = $value;
+        }
+
         return $this->checkOfEmtpyVariable('HEADER');
     }
 

@@ -330,6 +330,7 @@ class RequestData extends Request
     public static function getHost(): string
     {
         $instance = Request::create();
+        // return-code also in the RequestMock
         return $instance->var_SERVER['HTTP_HOST'];
     }
 
@@ -340,6 +341,7 @@ class RequestData extends Request
     public static function getHttps(): ?string
     {
         $instance = Request::create();
+        // return-code also in the RequestMock
         return isset($instance->var_SERVER['HTTPS']) && $instance->var_SERVER['HTTPS'] === 'on' ? 'on' : null;
     }
 

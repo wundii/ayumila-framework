@@ -16,6 +16,11 @@ composer.json
 ```
 
 ## Version History
+* 0.1.23
+  * adjusted the CoreEngine Class
+  * adjusted the Request Class
+  * adjusted the RequestMock Class
+  * adjusted the Router Class
 * 0.1.22
   * adjusted Propel-Ayumila Helper Class
 * 0.1.21

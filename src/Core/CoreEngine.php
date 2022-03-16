@@ -7,16 +7,19 @@ use Ayumila\Traits\SingletonStandard;
 use Ayumila\Classes\Helper;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use ReflectionClass;
 use RegexIterator;
 
 class CoreEngine
 {
     use SingletonStandard;
 
-    protected array  $app_routes        = array();
-    protected array  $app_routeResponse = array();
-    protected array  $app_twig          = array();
-    private   array  $appClassDirectory = array();
+    protected array   $app_routes        = array();
+    protected array   $app_routeResponse = array();
+    protected array   $app_twig          = array();
+    private   array   $appClassDirectory = array();
+    private   ?string $appClassFile    = null;
+    private   string  $engineDataType    = '';
 
     /**
      * CustomTrait constructor
@@ -42,12 +45,34 @@ class CoreEngine
 
         foreach ($appClassDirectory AS $directory)
         {
-            if(!is_dir($directory)) {
+            if(!is_dir($directory))
+            {
                 throw new AyumilaException('directory not found');
             }
         }
 
+        $this->engineDataType    = 'directoryIterator';
         $this->appClassDirectory = $appClassDirectory;
+
+        return $this;
+    }
+
+    /**
+     * @param string $appSingleClass
+     * @return $this
+     * @throws AyumilaException
+     */
+    public function setAppClassFileByClassName(string $appSingleClass): self
+    {
+        if(!class_exists($appSingleClass))
+        {
+            throw new AyumilaException('class not found');
+        }
+
+        $reflection = new ReflectionClass($appSingleClass);
+
+        $this->engineDataType = 'browseAnnotationsByFilename';
+        $this->appClassFile   = $reflection->getFileName();
 
         return $this;
     }
@@ -103,7 +128,13 @@ class CoreEngine
         $this->app_twig          = array();
         $routesIsDoubleCheck     = array();
 
-        foreach ($this->directoryIterator() AS $class)
+        $classData = match ($this->engineDataType) {
+            'directoryIterator'           => $this->directoryIterator(),
+            'browseAnnotationsByFilename' => $this->browseAnnotationsByFilename($this->appClassFile),
+            default                       => throw new AyumilaException('dont valid engineDataType found'),
+        };
+
+        foreach ($classData AS $class)
         {
             if(class_exists($class['class']))
             {
@@ -230,9 +261,12 @@ class CoreEngine
         }
     }
 
-    private function directoryIterator():array
+    /**
+     * @return array
+     */
+    private function directoryIterator(): array
     {
-        $classes           = array();
+        $classes = array();
 
         foreach ($this->appClassDirectory AS $directory)
         {
@@ -241,115 +275,114 @@ class CoreEngine
 
             foreach ($phpFiles as $phpFile)
             {
-                $content           = file_get_contents($phpFile->getRealPath());
-                $tokens            = token_get_all($content);
-                $namespace         = '';
-                $class             = '';
-                $methods           = array();
-                $methodAnnotations = false;
-                $annotations       = array();
+                $classes = $this->browseAnnotationsByFilename($phpFile->getRealPath(), $classes);
+            }
+        }
 
-                for ($index = 0; isset($tokens[$index]); $index++)
-                {
-                    if (!isset($tokens[$index][0]))
-                    {
-                        continue;
-                    }
+        return $classes;
+    }
 
-                    if (T_NAMESPACE === $tokens[$index][0])
-                    {
-                        $index += 2; // Skip namespace keyword and whitespace
-                        while (isset($tokens[$index]) && is_array($tokens[$index]))
-                        {
-                            $namespace .= !str_starts_with('\\', $tokens[$index][1]) ? '\\' . $tokens[$index][1] : $tokens[$index][1];
-                            $index++;
-                        }
-                    }
+    /**
+     * @param string $filename
+     * @param array $classes
+     * @return array
+     */
+    private function browseAnnotationsByFilename(string $filename, array $classes = array()): array
+    {
+        $content = file_get_contents($filename);
+        $tokens = token_get_all($content);
+        $namespace = '';
+        $class = '';
+        $methods = array();
+        $methodAnnotations = false;
+        $annotations = array();
 
-                    if (T_DOC_COMMENT === $tokens[$index][0])
-                    {
-                        preg_match_all('/\* @(?P<variable>\w+) (?P<value>[\w\s\-_%:\\\\.{}\/>]+)/', $tokens[$index][1], $matches);
+        for ($index = 0; isset($tokens[$index]); $index++) {
+            if (!isset($tokens[$index][0])) {
+                continue;
+            }
 
-                        if(isset($matches['variable']) && isset($matches['value']))
-                        {
-                            $cntMatrix     = array();
-                            $variableArray = array();
-                            foreach ($matches['variable'] AS $value)
-                            {
-                                $cnt = array_key_exists($value, $cntMatrix) ? $cntMatrix[$value] : 0;
-
-                                $variableArray[] = strtolower($value).'#'.$cnt;
-
-                                $cntMatrix[$value] = ++$cnt;
-                            }
-                            foreach ($matches['value'] AS $key => $value)
-                            {
-                                $matches['value'][$key] = trim($value);
-                            }
-
-                            $annotations = array_combine($variableArray, $matches['value']);
-                        }
-                    }
-
-                    /**
-                     * Wichtig: Die For-Schleife um die jeweiligen PHP Dateien auszuwerten wird immer nach
-                     * der Class <classname> mit einem break; abbrechen. Beim Auslesen der Annotation werden
-                     * somit nur der letzte AnnotationArray zurückgegeben der vor der Class <classname> steht.
-                     */
-                    if (T_CLASS === $tokens[$index][0] && T_WHITESPACE === $tokens[$index + 1][0] && T_STRING === $tokens[$index + 2][0])
-                    {
-                        $index += 2; // Skip class keyword and whitespace
-
-                        // $class = !str_starts_with('\\', $namespace) ? '\\' . $namespace : $namespace;
-                        // $class = $class.'\\'.$tokens[$index][1];
-                        $class = $namespace.'\\'.$tokens[$index][1];
-
-                        // break if you have one class per file (psr-4 compliant)
-                        // otherwise you'll need to handle class constants (Foo::class)
-                        if($namespace && $annotations && !$methodAnnotations){
-                            break;
-                        }
-                    }
-
-                    if (
-                        T_PUBLIC === $tokens[$index][0]
-                        && T_WHITESPACE === $tokens[$index + 1][0]
-                        && T_FUNCTION === $tokens[$index + 2][0]
-                        && T_WHITESPACE === $tokens[$index + 3][0]
-                        && T_STRING === $tokens[$index + 4][0] )
-                    {
-
-                        $index += 4; // Skip class keyword and whitespace
-
-                        if(!array_key_exists($tokens[$index][1], $methods) && $class)
-                        {
-                            $methods[] = $tokens[$index][1];
-
-                            $classes[] = [
-                                'action'      => 'method',
-                                'class'       => $class,
-                                'method'      => $tokens[$index][1],
-                                'annotations' => $annotations
-                            ];
-
-                            $annotations       = array();
-                            $methodAnnotations = true;
-                        }
-                    }
+            if (T_NAMESPACE === $tokens[$index][0]) {
+                $index += 2; // Skip namespace keyword and whitespace
+                while (isset($tokens[$index]) && is_array($tokens[$index])) {
+                    $namespace .= !str_starts_with('\\', $tokens[$index][1]) ? '\\' . $tokens[$index][1] : $tokens[$index][1];
+                    $index++;
                 }
+            }
 
-                if($class && !$methods && isset($tokens[$index][1]) && $tokens[$index][1])
-                {
+            if (T_DOC_COMMENT === $tokens[$index][0]) {
+                preg_match_all('/\* @(?P<variable>\w+) (?P<value>[\w\s\-_%:\\\\.{}\/>]+)/', $tokens[$index][1], $matches);
+
+                if (isset($matches['variable']) && isset($matches['value'])) {
+                    $cntMatrix = array();
+                    $variableArray = array();
+                    foreach ($matches['variable'] as $value) {
+                        $cnt = array_key_exists($value, $cntMatrix) ? $cntMatrix[$value] : 0;
+
+                        $variableArray[] = strtolower($value) . '#' . $cnt;
+
+                        $cntMatrix[$value] = ++$cnt;
+                    }
+                    foreach ($matches['value'] as $key => $value) {
+                        $matches['value'][$key] = trim($value);
+                    }
+
+                    $annotations = array_combine($variableArray, $matches['value']);
+                }
+            }
+
+            /**
+             * Wichtig: Die For-Schleife um die jeweiligen PHP Dateien auszuwerten wird immer nach
+             * der Class <classname> mit einem break; abbrechen. Beim Auslesen der Annotation werden
+             * somit nur der letzte AnnotationArray zurückgegeben der vor der Class <classname> steht.
+             */
+            if (T_CLASS === $tokens[$index][0] && T_WHITESPACE === $tokens[$index + 1][0] && T_STRING === $tokens[$index + 2][0]) {
+                $index += 2; // Skip class keyword and whitespace
+
+                // $class = !str_starts_with('\\', $namespace) ? '\\' . $namespace : $namespace;
+                // $class = $class.'\\'.$tokens[$index][1];
+                $class = $namespace . '\\' . $tokens[$index][1];
+
+                // break if you have one class per file (psr-4 compliant)
+                // otherwise you'll need to handle class constants (Foo::class)
+                if ($namespace && $annotations && !$methodAnnotations) {
+                    break;
+                }
+            }
+
+            if (
+                T_PUBLIC === $tokens[$index][0]
+                && T_WHITESPACE === $tokens[$index + 1][0]
+                && T_FUNCTION === $tokens[$index + 2][0]
+                && T_WHITESPACE === $tokens[$index + 3][0]
+                && T_STRING === $tokens[$index + 4][0]) {
+
+                $index += 4; // Skip class keyword and whitespace
+
+                if (!array_key_exists($tokens[$index][1], $methods) && $class) {
+                    $methods[] = $tokens[$index][1];
+
                     $classes[] = [
-                        'action'      => 'class',
-                        'class'       => $namespace.'\\'.$tokens[$index][1],
-                        'method'      => '',
+                        'action' => 'method',
+                        'class' => $class,
+                        'method' => $tokens[$index][1],
                         'annotations' => $annotations
                     ];
+
+                    $annotations = array();
+                    $methodAnnotations = true;
                 }
             }
         }
 
+        if ($class && !$methods && isset($tokens[$index][1]) && $tokens[$index][1]) {
+            $classes[] = [
+                'action' => 'class',
+                'class' => $namespace . '\\' . $tokens[$index][1],
+                'method' => '',
+                'annotations' => $annotations
+            ];
+        }
         return $classes;
     }
 }
