@@ -4,13 +4,13 @@ namespace Ayumila\Classes;
 
 use Ayumila\ApplicationControllerData;
 use Ayumila\Http\Session;
+use Ayumila\Traits\Iterator AS TraitIterator;
 use Ayumila\Traits\MultitonStandard;
 
 class ToastCollection
 {
     use MultitonStandard;
-
-    private array $collection = array();
+    use TraitIterator;
 
     /**
      * @return void
