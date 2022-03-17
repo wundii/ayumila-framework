@@ -16,6 +16,8 @@ composer.json
 ```
 
 ## Version History
+* 0.1.24
+  * added PhpUnitCollection Class
 * 0.1.23
   * adjusted the CoreEngine Class
   * adjusted the Request Class
