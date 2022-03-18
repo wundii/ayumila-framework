@@ -3,6 +3,7 @@
 namespace Ayumila\Classes;
 
 use Ayumila\ApplicationControllerData;
+use Ayumila\Exceptions\AyumilaException;
 use Ayumila\Traits\Iterator AS TraitIterator;
 use Ayumila\Traits\SingletonStandard;
 use Iterator;
@@ -16,6 +17,7 @@ final class PhpUnitCollection implements Iterator
      * @param string $status
      * @param string $description
      * @return void
+     * @throws AyumilaException
      */
     public static function addEntity(string $status, string $description)
     {
@@ -34,6 +36,8 @@ final class PhpUnitCollection implements Iterator
             $entity->setFileLine($fileLine);
             $entity->setFileClass($fileClass);
             $entity->setFileFunc($fileFunc);
+            $entity->setAppKey(ApplicationControllerData::getCurrantApplicationKey());
+            $entity->setAppLayer(ApplicationControllerData::getCurrentApplicationLayer());
 
             $instance = self::create();
             $instance->collection[] = $entity;
@@ -79,6 +83,8 @@ final class PhpUnitEntity
     private ?int   $fileLine    = null;
     private string $fileClass   = '';
     private string $fileFunc    = '';
+    private string $appKey      = '';
+    private int    $appLayer    = 1;
 
     /**
      * @return string
@@ -174,5 +180,37 @@ final class PhpUnitEntity
     public function setFileFunc(string $fileFunc): void
     {
         $this->fileFunc = $fileFunc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppKey(): string
+    {
+        return $this->appKey;
+    }
+
+    /**
+     * @param string $appKey
+     */
+    public function setAppKey(string $appKey): void
+    {
+        $this->appKey = $appKey;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAppLayer(): int
+    {
+        return $this->appLayer;
+    }
+
+    /**
+     * @param int $appLayer
+     */
+    public function setAppLayer(int $appLayer): void
+    {
+        $this->appLayer = $appLayer;
     }
 }
