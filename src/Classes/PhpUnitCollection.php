@@ -24,8 +24,8 @@ final class PhpUnitCollection implements Iterator
             $backtrace = debug_backtrace();
             $filePath  = $backtrace[0]['file'] ?? '';
             $fileLine  = $backtrace[0]['line'] ?? null;
-            $fileClass = $backtrace[1]['function'] ?? '';
-            $fileFunc  = $backtrace[1]['class'] ?? '';
+            $fileFunc  = $backtrace[1]['function'] ?? '';
+            $fileClass = $backtrace[1]['class'] ?? '';
 
             $entity = new PhpUnitEntity();
             $entity->setStatus($status);
@@ -49,8 +49,8 @@ final class PhpUnitCollection implements Iterator
     }
 
     /**
-     * @param string $status
-     * @param string $description // str_contains
+     * @param string $status // empty value or exactly
+     * @param string $description // empty value or str_contains
      * @return bool
      */
     public static function isEntityExists(string $status, string $description): bool
@@ -58,9 +58,12 @@ final class PhpUnitCollection implements Iterator
         $instance = self::create();
         foreach($instance AS $entity)
         {
-            if(str_contains($entity, $description))
+            if($entity instanceof PhpUnitEntity)
             {
-                return true;
+                if(($status === '' || $entity->getStatus() === $status) && str_contains($entity->getDescription(), $description))
+                {
+                    return true;
+                }
             }
         }
 
