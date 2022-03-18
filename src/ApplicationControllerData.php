@@ -94,4 +94,13 @@ class ApplicationControllerData extends ApplicationController{
         $instance = self::create();
         return $instance->devMode;
     }
+
+    /**
+     * @return bool
+     */
+    public static function isTestMode(): bool
+    {
+        $instance = self::create();
+        return $instance->testMode;
+    }
 }

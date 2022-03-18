@@ -77,7 +77,7 @@ class Controller
 
         ApplicationLog::send(true);
 
-        if(!ApplicationControllerData::isDevMode())
+        if(!ApplicationControllerData::isTestMode())
         {
             header("Location: {$uri}");
             die();

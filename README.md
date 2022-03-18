@@ -16,6 +16,12 @@ composer.json
 ```
 
 ## Version History
+* 0.1.25
+  * adjusted the PhpUnitCollection Class with debug_backtrace
+  * adjusted the Application Class with TestMode
+  * adjusted the ApplicationController Class with TestMode
+  * adjusted the ApplicationControllerData Class with TestMode
+  * adjusted the Controller Class
 * 0.1.24
   * added PhpUnitCollection Class
 * 0.1.23

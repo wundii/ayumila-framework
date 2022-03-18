@@ -15,6 +15,7 @@ class ApplicationController {
     protected array        $applicationSingletons = array();
     protected string       $currentApplicationKey = '';
     protected bool         $devMode               = false;
+    protected bool         $testMode              = false;
 
     /**
      * @param Application $app
@@ -204,6 +205,15 @@ class ApplicationController {
     public function setDevMode(): self
     {
         $this->devMode = true;
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function setTestMode(): self
+    {
+        $this->testMode = true;
         return $this;
     }
 }

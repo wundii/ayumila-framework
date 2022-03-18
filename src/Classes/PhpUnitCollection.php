@@ -2,6 +2,7 @@
 
 namespace Ayumila\Classes;
 
+use Ayumila\ApplicationControllerData;
 use Ayumila\Traits\Iterator AS TraitIterator;
 use Ayumila\Traits\SingletonStandard;
 use Iterator;
@@ -18,22 +19,25 @@ final class PhpUnitCollection implements Iterator
      */
     public static function addEntity(string $status, string $description)
     {
-        $backtrace = debug_backtrace();
-        $filePath  = $backtrace[0]['file'] ?? '';
-        $fileLine  = $backtrace[0]['line'] ?? null;
-        $fileClass = $backtrace[1]['function'] ?? '';
-        $fileFunc  = $backtrace[1]['class'] ?? '';
+        if(ApplicationControllerData::isTestMode())
+        {
+            $backtrace = debug_backtrace();
+            $filePath  = $backtrace[0]['file'] ?? '';
+            $fileLine  = $backtrace[0]['line'] ?? null;
+            $fileClass = $backtrace[1]['function'] ?? '';
+            $fileFunc  = $backtrace[1]['class'] ?? '';
 
-        $entity = new PhpUnitEntity();
-        $entity->setStatus($status);
-        $entity->setDescription($description);
-        $entity->setFilePath($filePath);
-        $entity->setFileLine($fileLine);
-        $entity->setFileClass($fileClass);
-        $entity->setFileFunc($fileFunc);
+            $entity = new PhpUnitEntity();
+            $entity->setStatus($status);
+            $entity->setDescription($description);
+            $entity->setFilePath($filePath);
+            $entity->setFileLine($fileLine);
+            $entity->setFileClass($fileClass);
+            $entity->setFileFunc($fileFunc);
 
-        $instance = self::create();
-        $instance->collection[] = $entity;
+            $instance = self::create();
+            $instance->collection[] = $entity;
+        }
     }
 
     /**
