@@ -10,18 +10,19 @@
     ],
     "require": {
         "php": ">=8.0.0",
-        "league/oauth2-google": "~3.0",
         "php-amqplib/php-amqplib": "~v3.1.0",
         "php-di/php-di": "~6.3",
-        "propel/propel": "~2.0.0-beta1",
-        "symfony/monolog-bundle": "^3.7",
         "phpunit/phpunit": "~9",
+        "propel/propel": "~2.0.0-beta1",
+        "league/oauth2-google": "~3.0",
+        "symfony/monolog-bundle": "^3.7",
         "twig/twig": "~3",
         "ext-apcu": "*",
-        "ext-pdo": "*",
-        "ext-simplexml": "*",
+        "ext-iconv": "*",
         "ext-mbstring": "*",
-        "ext-iconv": "*"
+        "ext-mysqli": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {},
     "autoload": {

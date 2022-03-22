@@ -6,12 +6,12 @@ composer.json
 ```
 "repositories": [
     {
-        "type": "git",
+        "type": "vcs",
         "url": "https://github.com/wundii/ayumila-framework.git"
     }
 ],
 "require": {
-    "wundii/ayumila-framework": "~v0.1"
+    "wundii/ayumila-framework": "^v0.1"
 }
 ```
 
